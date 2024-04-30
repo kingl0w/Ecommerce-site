@@ -13,18 +13,25 @@
       </div>
 
       <div v-if="latestProducts.length > 0">
-        <div
-          class="column is-one-third-desktop"
-          v-for="product in latestProducts"
-          :key="product.id"
-        >
-          <div class="box">
-            <figure class="image mb-4">
-              <img :src="product.get_thumbnail" />
-            </figure>
-            <h3 class="is-size-4">{{ product.name }}</h3>
-            <p class="is-size-6 has-text-grey">${{ product.price }}</p>
-            View Details
+        <div class="columns is-multiline">
+          <div
+            class="column is-6-desktop is-12-mobile"
+            v-for="product in latestProducts"
+            :key="product.id"
+          >
+            <div class="box">
+              <figure class="image mb-4">
+                <img :src="product.get_thumbnail" alt="Product image" />
+              </figure>
+              <h3 class="is-size-4">{{ product.name }}</h3>
+              <p class="is-size-6 has-text-grey">${{ product.price }}</p>
+              <router-link
+                v-bind:to="product.get_absolute_url"
+                class="button is-dark mt-4"
+              >
+                View Product
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -67,12 +74,39 @@ export default {
 
 <style scoped>
 .box {
-  width: 20rem;
+  width: auto;
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .image {
-  margin-top: -1.25rem;
-  margin-left: -1.25rem;
-  margin-right: -1.25rem;
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.image img {
+  width: 70vw;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4%;
+}
+
+@media screen and (min-width: 768px) {
+  .box {
+    width: 25rem;
+    margin: 1rem;
+  }
+
+  .image img {
+    width: 25rem;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4%;
+  }
 }
 </style>
