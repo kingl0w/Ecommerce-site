@@ -44,11 +44,13 @@ export default {
     this.get_product();
   },
   methods: {
-    get_product() {
+    async get_product() {
+      this.$store.commit("setIsLoading", true);
+
       const category_slug = this.$route.params.category_slug;
       const product_slug = this.$route.params.product_slug;
 
-      axios
+      await axios
         .get(`/api/v1/products/${category_slug}/${product_slug}/`)
         .then((response) => {
           this.product = response.data;
@@ -56,6 +58,8 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+
+      this.$store.commit("setIsLoading", false);
     },
     addToCart() {
       if (isNaN(this.quantity) || this.quantity < 1) {

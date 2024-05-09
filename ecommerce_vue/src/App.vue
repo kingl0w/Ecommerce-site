@@ -41,6 +41,15 @@
       </div>
     </nav>
 
+    <div class="loading-bar-container">
+      <div
+        class="is-loading-bar has-text-centered"
+        v-bind:class="{ 'is-loading': $store.state.isLoading }"
+      >
+        <div class="lds-dual-ring"></div>
+      </div>
+    </div>
+
     <section class="section">
       <router-view />
     </section>
@@ -62,7 +71,7 @@ export default {
     };
   },
   beforeCreate() {
-    this.$store.commit("initialiseStore");
+    this.$store.commit("initializeStore");
   },
   mounted() {
     this.cart = this.$store.state.cart;
@@ -83,4 +92,54 @@ export default {
 
 <style lang="scss">
 @import "../node_modules/bulma";
+
+.lds-dual-ring:after {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #ccc;
+  border-color: #ccc transparent #ccc transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+.loading-bar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.is-loading-bar {
+  position: relative;
+  height: 0;
+  overflow: hidden;
+  transition: all 0.3s;
+
+  &.is-loading {
+    height: 80px;
+  }
+}
 </style>
