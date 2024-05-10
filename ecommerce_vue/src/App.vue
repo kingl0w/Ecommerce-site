@@ -10,7 +10,7 @@
           aria-label="menu"
           aria-expanded="false"
           data-target="navbar-menu"
-          @click="showModileMenu = !showModileMenu"
+          @click="showMobileMenu = !showMobileMenu"
         >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -20,12 +20,11 @@
       <div
         class="navbar-menu"
         id="navbar-menu"
-        v-bind:class="{ 'is-active': showModileMenu }"
+        v-bind:class="{ 'is-active': showMobileMenu }"
       >
         <div class="navbar-end">
           <router-link to="/shirts" class="navbar-item">Shirts</router-link>
           <router-link to="/hoodies" class="navbar-item">Hoodies</router-link>
-
           <div class="navbar-item">
             <div class="buttons">
               <router-link to="/log-in" class="button is-light">
@@ -40,7 +39,6 @@
         </div>
       </div>
     </nav>
-
     <div class="loading-bar-container">
       <div
         class="is-loading-bar has-text-centered"
@@ -49,11 +47,9 @@
         <div class="lds-dual-ring"></div>
       </div>
     </div>
-
     <section class="section">
       <router-view />
     </section>
-
     <footer class="footer">
       <p class="has-text-centered">A Taddymason creation</p>
     </footer>
@@ -64,7 +60,7 @@
 export default {
   data() {
     return {
-      showModileMenu: false,
+      showMobileMenu: false,
       cart: {
         items: [],
       },
@@ -79,11 +75,9 @@ export default {
   computed: {
     cartTotalLength() {
       let totalLength = 0;
-
       for (let i = 0; i < this.cart.items.length; i++) {
         totalLength += this.cart.items[i].quantity;
       }
-
       return totalLength;
     },
   },

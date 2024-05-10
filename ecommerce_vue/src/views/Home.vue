@@ -6,38 +6,25 @@
         <p class="subtitle">The best place to find the latest street wear</p>
       </div>
     </section>
-
-    <div class="columns is-multiline is-centered is-desktop">
-      <div class="column is-12">
-        <h2 class="is-size-2 has-text-centered mb-6">Latest Products</h2>
-      </div>
-
-      <div v-if="latestProducts.length > 0">
-        <div class="columns is-multiline">
-          <div
-            class="column is-6-desktop is-12-mobile"
-            v-for="product in latestProducts"
-            :key="product.id"
-          >
-            <div class="box">
-              <figure class="image mb-4">
-                <img :src="product.get_thumbnail" alt="Product image" />
-              </figure>
-              <h3 class="is-size-4">{{ product.name }}</h3>
-              <p class="is-size-6 has-text-grey">${{ product.price }}</p>
-              <router-link
-                v-bind:to="product.get_absolute_url"
-                class="button is-dark mt-4"
-              >
-                View Product
-              </router-link>
+    <div class="container">
+      <div class="columns is-multiline is-centered">
+        <div class="column is-12">
+          <h2 class="is-size-2 has-text-centered mb-6">Latest Products</h2>
+        </div>
+        <template v-if="latestProducts.length > 0">
+          <div class="column is-12">
+            <div class="columns is-multiline is-centered">
+              <ProductBox
+                v-for="product in latestProducts"
+                :key="product.id"
+                :product="product"
+              />
             </div>
           </div>
+        </template>
+        <div v-else class="column is-12">
+          <p>No products available.</p>
         </div>
-      </div>
-
-      <div v-else>
-        <p>No products available.</p>
       </div>
     </div>
   </div>
@@ -46,6 +33,8 @@
 <script>
 import axios from "axios";
 
+import ProductBox from "@/components/ProductBox.vue";
+
 export default {
   name: "Home",
   data() {
@@ -53,13 +42,17 @@ export default {
       latestProducts: [],
     };
   },
-  components: {},
+  components: {
+    ProductBox,
+  },
   mounted() {
     this.getLatestProducts();
+    document.title = "Home | KONLY";
   },
   methods: {
-    getLatestProducts() {
-      axios
+    async getLatestProducts() {
+      this.$store.commit("setIsLoading", true);
+      await axios
         .get("/api/v1/latest-products/")
         .then((response) => {
           this.latestProducts = response.data;
@@ -67,46 +60,16 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+
+      this.$store.commit("setIsLoading", false);
     },
   },
 };
 </script>
 
 <style scoped>
-.box {
-  width: auto;
-  margin: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.image {
-  margin-top: 0;
-  margin-left: 0;
-  margin-right: 0;
-  overflow: hidden;
-  text-align: center;
-}
-
-.image img {
-  width: 70vw;
-  height: auto;
-  object-fit: cover;
-  border-radius: 4%;
-}
-
-@media screen and (min-width: 768px) {
-  .box {
-    width: 25rem;
-    margin: 1rem;
-  }
-
-  .image img {
-    width: 25rem;
-    height: auto;
-    object-fit: cover;
-    border-radius: 4%;
-  }
+.container {
+  max-width: 960px;
+  margin: 0 auto;
 }
 </style>
