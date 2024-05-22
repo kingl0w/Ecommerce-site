@@ -32,7 +32,7 @@ export default {
     };
   },
   mounted() {
-    document.title = "Search | KOLY";
+    document.title = "Search | KONLY";
     if (this.$route.query.query) {
       this.query = this.$route.query.query;
       this.performSearch();
