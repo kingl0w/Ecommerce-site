@@ -3,7 +3,7 @@
     <nav class="navbar is-dark">
       <div class="navbar-brand">
         <router-link to="/" class="navbar-item"
-          ><strong>KOLY</strong></router-link
+          ><strong>KONLY</strong></router-link
         >
         <a
           class="navbar-burger"
