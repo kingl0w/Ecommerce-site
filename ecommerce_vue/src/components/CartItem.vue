@@ -63,7 +63,7 @@ export default {
 .quantity-control {
   display: flex;
   align-items: center;
-  margin-right: 3rem; /* Adjust the value as needed */
+  margin-left: -0.5rem;
 }
 
 .quantity-control span {
