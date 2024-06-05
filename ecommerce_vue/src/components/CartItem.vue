@@ -58,3 +58,21 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.quantity-control {
+  display: flex;
+  align-items: center;
+  margin-right: 3rem; /* Adjust the value as needed */
+}
+
+.quantity-control span {
+  cursor: pointer;
+  font-size: 1.3rem;
+  padding: 0 0.5rem;
+}
+
+.quantity-control i {
+  vertical-align: middle;
+}
+</style>
