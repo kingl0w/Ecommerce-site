@@ -22,22 +22,24 @@
               v-for="item in cart.items"
               v-bind:key="item.product.id"
               v-bind:initialItem="item"
+              v-on:removeFromCart="removeFromCart"
             />
           </tbody>
         </table>
 
-        <p v-else>No Items In Cart...</p>
+        <p v-else>No products in cart...</p>
       </div>
 
       <div class="column is-12">
         <h2 class="subtitle">Summary</h2>
+
         <strong>${{ cartTotalPrice.toFixed(2) }}</strong> -
         {{ cartTotalLength }} items
 
         <hr />
 
         <router-link to="/cart/checkout" class="button is-dark"
-          >Checkout</router-link
+          >Continue to Checkout</router-link
         >
       </div>
     </div>
@@ -62,7 +64,13 @@ export default {
   },
   mounted() {
     this.cart = this.$store.state.cart;
-    document.title = "Cart | KONLY";
+  },
+  methods: {
+    removeFromCart(item) {
+      this.cart.items = this.cart.items.filter(
+        (i) => i.product.id !== item.product.id
+      );
+    },
   },
   computed: {
     cartTotalLength() {
