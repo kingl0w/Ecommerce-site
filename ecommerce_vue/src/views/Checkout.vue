@@ -231,7 +231,24 @@ export default {
       if (this.zipcode === "") {
         this.errors.push("The zipcode field is required.");
       }
+
+      if (!this.errors.length) {
+        this.$store.commit("setIsLoading", true);
+
+        this.stripe.createToken(this.card).then((result) => {
+          if (result.error) {
+            this.$store.commit("setIsLoading", false);
+            this.errors.push("Something went wrong with the Stripe token.");
+
+            console.log(result.error.message);
+          } else {
+            this.stripeTokenHandler(result.token);
+          }
+        });
+      }
     },
+    async stripeTokenHandler(token) {
+      const items = this.cart.items[i]
   },
   computed: {
     cartTotalPrice() {
