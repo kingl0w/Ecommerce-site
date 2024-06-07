@@ -39,7 +39,7 @@
         <hr />
 
         <router-link to="/cart/checkout" class="button is-dark"
-          >Continue to Checkout</router-link
+          >Checkout</router-link
         >
       </div>
     </div>

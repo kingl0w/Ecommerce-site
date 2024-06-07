@@ -51,11 +51,24 @@
         <div class="navbar-end">
           <router-link to="/shirts" class="navbar-item">Shirts</router-link>
           <router-link to="/hoodies" class="navbar-item">Hoodies</router-link>
+
           <div class="navbar-item">
             <div class="buttons">
-              <router-link to="/log-in" class="button is-light">
-                <strong>Log In</strong>
-              </router-link>
+              <template v-if="$store.state.isAuthenticated">
+                <router-link to="/my-account" class="button is-light">
+                  <strong>My account</strong>
+                </router-link>
+
+                <!-- maybe remove logut button, it might be a bit much in the navbar -->
+                <button @click="logout()" class="button is-light">
+                  <strong>Log out</strong>
+                </button>
+              </template>
+              <template v-else>
+                <router-link to="/log-in" class="button is-light">
+                  <strong>Log in</strong>
+                </router-link>
+              </template>
               <router-link to="/cart" class="button is-success">
                 <span class="icon"><i class="fas fa-shopping-cart"></i></span>
                 <span>Cart ({{ cartTotalLength }})</span>
@@ -112,6 +125,14 @@ export default {
     performSearch(event) {
       const query = event.target.elements.query.value;
       this.$router.push({ name: "Search", query: { query } });
+    },
+    logout() {
+      axios.defaults.headers.common["Authorization"] = "";
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      localStorage.removeItem("userid");
+      this.$store.commit("removeToken");
+      this.$router.push("/");
     },
   },
   computed: {
