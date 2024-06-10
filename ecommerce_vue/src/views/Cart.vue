@@ -55,24 +55,10 @@ export default {
   components: {
     CartItem,
   },
-  data() {
-    return {
-      cart: {
-        items: [],
-      },
-    };
-  },
-  mounted() {
-    this.cart = this.$store.state.cart;
-  },
-  methods: {
-    removeFromCart(item) {
-      this.cart.items = this.cart.items.filter(
-        (i) => i.product.id !== item.product.id
-      );
-    },
-  },
   computed: {
+    cart() {
+      return this.$store.state.cart;
+    },
     cartTotalLength() {
       return this.cart.items.reduce((acc, curVal) => {
         return (acc += curVal.quantity);
@@ -82,6 +68,11 @@ export default {
       return this.cart.items.reduce((acc, curVal) => {
         return (acc += curVal.product.price * curVal.quantity);
       }, 0);
+    },
+  },
+  methods: {
+    removeFromCart(item) {
+      this.$store.dispatch("removeFromCart", item);
     },
   },
 };
