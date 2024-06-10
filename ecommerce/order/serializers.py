@@ -23,7 +23,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "email",
             "phone",
             "address",
-            "address2",
+            "addressLine2",
             "city",
             "state",
             "zip_code",
