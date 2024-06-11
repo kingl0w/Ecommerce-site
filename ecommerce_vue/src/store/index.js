@@ -9,9 +9,7 @@ export default createStore({
     token: "",
     isLoading: false,
   },
-
   getters: {},
-
   mutations: {
     initializeStore(state) {
       const cartFromStorage = localStorage.getItem("cart");
@@ -60,14 +58,13 @@ export default createStore({
       state.isAuthenticated = false;
     },
   },
-
   actions: {
     initializeStore({ commit }) {
       commit("initializeStore");
     },
+    removeFromCart({ commit }, item) {
+      commit("removeFromCart", item);
+    },
   },
-
   modules: {},
 });
-
-//TODO : Fix state issue with vuex store

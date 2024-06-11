@@ -13,6 +13,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
         
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True)
+    address2 = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = Order
@@ -23,7 +24,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "email",
             "phone",
             "address",
-            "addressLine2",
+            "address2",
             "city",
             "state",
             "zip_code",
