@@ -106,7 +106,7 @@
                 <input
                   type="text"
                   class="input"
-                  v-model="addressLine2"
+                  v-model="address2"
                   placeholder="Address Line 2"
                 />
               </div>
@@ -140,7 +140,7 @@
                 <input
                   type="text"
                   class="input"
-                  v-model="zipcode"
+                  v-model="zip_code"
                   placeholder="Zipcode"
                 />
               </div>
@@ -153,7 +153,7 @@
 
         <hr />
 
-        <div id="card-element" class="mb-5"></div>
+        <div id="card-element" class="mb-5 stripe-card"></div>
 
         <template v-if="cartTotalLength">
           <hr />
@@ -183,9 +183,10 @@ export default {
       email: "",
       phone: "",
       address: "",
-      addressLine2: "",
-      zipcode: "",
-      place: "",
+      address2: "",
+      city: "",
+      state: "",
+      zip_code: "",
       errors: [],
     };
   },
@@ -197,7 +198,24 @@ export default {
     if (this.cartTotalLength > 0) {
       this.stripe = window.Stripe(process.env.STRIPE_KEY);
       const elements = this.stripe.elements();
-      this.card = elements.create("card", { hidePostalCode: true });
+      this.card = elements.create("card", {
+        hidePostalCode: true,
+        style: {
+          base: {
+            color: "#ffffff",
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: "antialiased",
+            fontSize: "16px",
+            "::placeholder": {
+              color: "#aab7c4",
+            },
+          },
+          invalid: {
+            color: "#fa755a",
+            iconColor: "#fa755a",
+          },
+        },
+      });
       this.card.mount("#card-element");
     }
   },
@@ -257,28 +275,21 @@ export default {
       }
     },
     async stripeTokenHandler(token) {
-      const items = [];
-
-      for (let i = 0; i < this.cart.items.length; i++) {
-        const item = this.cart.items[i];
-        const obj = {
-          product: item.product.id,
-          quantity: item.quantity,
-          price: item.product.price * item.quantity,
-        };
-
-        items.push(obj);
-      }
+      const items = this.cart.items.map((item) => ({
+        product: item.product.id,
+        quantity: item.quantity,
+        price: item.product.price * item.quantity,
+      }));
 
       const data = {
         first_name: this.first_name,
         last_name: this.last_name,
         email: this.email,
         address: this.address,
-        addressLine2: this.addressLine2,
+        address2: this.address2 || "",
         city: this.city,
         state: this.state,
-        zipcode: this.zipcode,
+        zip_code: this.zip_code,
         phone: this.phone,
         items: items,
         stripe_token: token.id,
@@ -292,7 +303,6 @@ export default {
         })
         .catch((error) => {
           this.errors.push("Something went wrong. Please try again.");
-
           console.log(error);
         });
 
@@ -313,3 +323,31 @@ export default {
   },
 };
 </script>
+
+<style>
+.stripe-card .StripeElement {
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: white;
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  transition: box-shadow 150ms ease;
+}
+
+.stripe-card .StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.stripe-card .StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.stripe-card .StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
+
+.stripe-card input {
+  color: #ffffff;
+}
+</style>
