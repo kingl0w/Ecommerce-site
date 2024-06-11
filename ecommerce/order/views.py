@@ -2,16 +2,13 @@ import stripe
 from django.conf import settings
 from django.http import Http404
 from django.shortcuts import render
-from rest_framework import status, authentication, permissions
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Order, OrderItem
 from .serializers import OrderSerializer
 
 @api_view(['POST'])
-@authentication_classes([authentication.TokenAuthentication])
-@permission_classes([permissions.IsAuthenticated])
 def checkout(request):
     serializer = OrderSerializer(data=request.data)
     if serializer.is_valid():
@@ -24,7 +21,10 @@ def checkout(request):
                 description='Charge from KONLY',
                 source=serializer.validated_data['stripe_token']
             )
-            serializer.save(user=request.user, paid_amount=paid_amount)
+            if request.user.is_authenticated:
+                serializer.save(user=request.user, paid_amount=paid_amount)
+            else:
+                serializer.save(paid_amount=paid_amount)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

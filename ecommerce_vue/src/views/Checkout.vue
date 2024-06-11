@@ -140,7 +140,7 @@
                 <input
                   type="text"
                   class="input"
-                  v-model="zipcode"
+                  v-model="zip_code"
                   placeholder="Zipcode"
                 />
               </div>
@@ -184,8 +184,9 @@ export default {
       phone: "",
       address: "",
       address2: "",
+      city: "",
+      state: "",
       zip_code: "",
-      place: "",
       errors: [],
     };
   },
