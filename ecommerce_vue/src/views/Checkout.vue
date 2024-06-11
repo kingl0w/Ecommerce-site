@@ -289,7 +289,7 @@ export default {
         address2: this.address2 || "",
         city: this.city,
         state: this.state,
-        zip_code: this.zipcode,
+        zip_code: this.zip_code,
         phone: this.phone,
         items: items,
         stripe_token: token.id,
