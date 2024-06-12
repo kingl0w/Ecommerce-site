@@ -299,6 +299,7 @@ export default {
         .post("/api/v1/checkout/", data)
         .then((response) => {
           this.$store.commit("clearCart");
+          this.cart = { items: [] };
           this.$router.push("/cart/success");
         })
         .catch((error) => {

@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 def checkout(request):
     serializer = OrderSerializer(data=request.data)
     if serializer.is_valid():
-        stripe.api_key = settings.STRIPE_KEY
+        stripe.api_key = settings.STRIPE_SECRET_KEY
         paid_amount = sum(item.get('quantity') * item.get('product').price for item in serializer.validated_data['items'])
         try:
             charge = stripe.Charge.create(
