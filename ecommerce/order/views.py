@@ -4,6 +4,7 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import generics
 from .models import Order, OrderItem
 from .serializers import OrderSerializer
 
@@ -34,3 +35,7 @@ def checkout(request):
     else:
         logger.error(f"Invalid serializer data: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class OrdersList(generics.ListAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
