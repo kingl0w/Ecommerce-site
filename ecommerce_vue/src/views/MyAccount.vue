@@ -1,3 +1,5 @@
+Certainly! Here's the updated MyAccount.vue component with the necessary
+changes: vueCopy code
 <template>
   <div class="page-my-account">
     <div class="columns is-multiline">
@@ -9,7 +11,7 @@
       </div>
       <div class="column is-12">
         <h2 class="subtitle">My Orders</h2>
-        <order-table :orders="orders"></order-table>
+        <order-table :orders="orders" :products="products"></order-table>
       </div>
     </div>
   </div>
@@ -27,10 +29,12 @@ export default {
   data() {
     return {
       orders: [],
+      products: [],
     };
   },
   mounted() {
     this.fetchOrders();
+    this.fetchProducts();
   },
   methods: {
     async fetchOrders() {
@@ -43,6 +47,14 @@ export default {
         this.orders = response.data;
       } catch (error) {
         console.error("Error fetching orders:", error);
+      }
+    },
+    async fetchProducts() {
+      try {
+        const response = await axios.get("/api/v1/latest-products/");
+        this.products = response.data;
+      } catch (error) {
+        console.error("Error fetching products:", error);
       }
     },
     logout() {

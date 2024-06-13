@@ -14,8 +14,8 @@
         </thead>
         <tbody>
           <tr v-for="item in order.items" :key="item.id">
-            <td>{{ item.product }}</td>
-            <td>${{ item.price }}</td>
+            <td>{{ getProductName(item.product) }}</td>
+            <td>${{ getUnitPrice(item).toFixed(2) }}</td>
             <td>{{ item.quantity }}</td>
             <td>${{ getItemTotal(item).toFixed(2) }}</td>
           </tr>
@@ -35,10 +35,22 @@ export default {
       type: Array,
       required: true,
     },
+    products: {
+      type: Array,
+      required: true,
+    },
   },
   methods: {
+    getUnitPrice(item) {
+      return item.price / item.quantity;
+    },
+    getProductName(productId) {
+      const product = this.products.find((p) => p.id === productId);
+      return product ? product.name : "";
+    },
     getItemTotal(item) {
-      return item.quantity * item.price;
+      const unitPrice = this.getUnitPrice(item);
+      return unitPrice * item.quantity;
     },
     orderTotalLength(order) {
       return order.items.reduce((acc, curVal) => {
