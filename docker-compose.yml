@@ -1,0 +1,21 @@
+version: "3"
+services:
+  ecommerce_vue:
+    build: ./ecommerce_vue
+    ports:
+      - "80:80"
+    env_file:
+      - ./ecommerce_vue/.env
+
+  ecommerce:
+    build: ./ecommerce
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./ecommerce:/app
+      - sqlite_data:/app/data
+    env_file:
+      - ./ecommerce/.env
+
+volumes:
+  sqlite_data:
