@@ -158,9 +158,7 @@
         <template v-if="cartTotalLength">
           <hr />
 
-          <button class="button is-dark" @click="submitForm">
-            Pay with Stripe
-          </button>
+          <button class="button is-dark" @click="submitForm">Pay Now</button>
         </template>
       </div>
     </div>
