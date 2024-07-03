@@ -1,4 +1,5 @@
-version: "3"
+version: "3.8"
+
 services:
   ecommerce_vue:
     build: ./ecommerce_vue
@@ -6,6 +7,8 @@ services:
       - "80:80"
     env_file:
       - ./ecommerce_vue/.env
+    depends_on:
+      - ecommerce
 
   ecommerce:
     build: ./ecommerce
@@ -14,8 +17,17 @@ services:
     volumes:
       - ./ecommerce:/app
       - sqlite_data:/app/data
+      - media_data:/app/media
     env_file:
       - ./ecommerce/.env
+    environment:
+      - BASE_URL=${BASE_URL}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
+      - SECRET_KEY=${SECRET_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+    command: sh -c "python manage.py migrate && gunicorn --bind 0.0.0.0:8000 ecommerce.wsgi:application"
 
 volumes:
   sqlite_data:
+  media_data:
