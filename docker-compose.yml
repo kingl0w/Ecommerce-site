@@ -1,33 +1,36 @@
 version: "3.8"
 
 services:
-  ecommerce_vue:
-    build: ./ecommerce_vue
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
     ports:
       - "80:80"
-    env_file:
-      - ./ecommerce_vue/.env
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    depends_on:
+      - ecommerce
+
+  ecommerce_vue:
+    build: ./ecommerce_vue
+    volumes:
+      - ./ecommerce_vue:/app
+      - /app/node_modules
     depends_on:
       - ecommerce
 
   ecommerce:
     build: ./ecommerce
-    ports:
-      - "8000:8000"
     volumes:
       - ./ecommerce:/app
-      - sqlite_data:/app/data
-      - media_data:/app/media
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     env_file:
       - ./ecommerce/.env
-    environment:
-      - BASE_URL=${BASE_URL}
-      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
-      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
-      - SECRET_KEY=${SECRET_KEY}
-      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
-    command: sh -c "python manage.py migrate && gunicorn --bind 0.0.0.0:8000 ecommerce.wsgi:application"
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 ecommerce.wsgi:application"
 
 volumes:
-  sqlite_data:
-  media_data:
+  static_volume:
+  media_volume:
