@@ -1,6 +1,16 @@
 version: "3.8"
-
 services:
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    env_file: -.env
   nginx:
     build:
       context: .
@@ -12,14 +22,23 @@ services:
       - media_volume:/app/media
     depends_on:
       - ecommerce
+    env_file:
+      - .env
 
   ecommerce_vue:
-    build: ./ecommerce_vue
+    build:
+      context: ./ecommerce_vue
+      args:
+        - VUE_APP_API_URL=${VUE_APP_API_URL}
+    environment:
+      - VUE_APP_API_URL=${VUE_APP_API_URL}
     volumes:
       - ./ecommerce_vue:/app
       - /app/node_modules
     depends_on:
       - ecommerce
+    env_file:
+      - .env
 
   ecommerce:
     build: ./ecommerce
@@ -28,9 +47,12 @@ services:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     env_file:
-      - ./ecommerce/.env
+      - .env
     command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 ecommerce.wsgi:application"
+    depends_on:
+      - db
 
 volumes:
   static_volume:
   media_volume:
+  postgres_data:
